@@ -19,11 +19,11 @@ public class Client
         this.portNumber = portNumber;
     }
 
-    class Lisntener extends Thread {
+    class Listener extends Thread {
         public boolean isRunning = true;
         BufferedReader in;
 
-        public Lisntener(BufferedReader in) {
+        public Listener(BufferedReader in) {
             this.in = in;
         }
 
@@ -53,11 +53,13 @@ public class Client
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         ) {
-            new Lisntener(in).start();
+            Listener listener = new Listener(in);
+            listener.start();
             String userInput;
             while ((userInput = stdIn.readLine()) != null) {
                 out.println(userInput);
             }
+            listener.isRunning = false;
         } catch (UnknownHostException e) {
             System.err.println("Dont know " + hostName);
             System.exit(1);
