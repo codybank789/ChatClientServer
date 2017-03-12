@@ -19,6 +19,33 @@ public class Client
         this.portNumber = portNumber;
     }
 
+    class Lisntener extends Thread {
+        public boolean isRunning = true;
+        BufferedReader in;
+
+        public Lisntener(BufferedReader in) {
+            this.in = in;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+
+            while(isRunning) {
+                try {
+                    if(in.ready()) {
+                        System.out.println(in.readLine());
+                    }
+                    sleep(500);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public void runClient() {
         try (
                 Socket socket = new Socket(hostName, portNumber);
@@ -26,6 +53,7 @@ public class Client
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         ) {
+            new Lisntener(in).start();
             String userInput;
             while ((userInput = stdIn.readLine()) != null) {
                 out.println(userInput);
