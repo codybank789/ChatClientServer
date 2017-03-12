@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -17,13 +18,20 @@ public class Server {
         this.listening = listening;
     }
 
+
+
     public void runServer() throws IOException {
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
         ) {
-            while (listening) {
-                ServerThread serverThread = new ServerThread(serverSocket.accept());
-                serverThread.start();
+            Socket socket = serverSocket.accept();
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            ServerThread serverThread = new ServerThread(socket);
+            serverThread.start();
+
+            String message = "Hello this is " + InetAddress.getLocalHost().getHostAddress() + " (local IP)";
+            while(!message.equals("exit")) {
+                out.print(message);
             }
         } catch (IOException e) {
             System.err.println("Cannot listen");

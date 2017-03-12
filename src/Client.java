@@ -33,13 +33,11 @@ public class Client
 
             while(isRunning) {
                 try {
-                    if(in.ready()) {
-                        System.out.println(in.readLine());
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        System.out.println(inputLine);
                     }
-                    sleep(500);
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
